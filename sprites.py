@@ -9,7 +9,7 @@ apple_types = {
         'source': "./Assets/apple.png"
     },
     "SPECIAL": {
-        'points': 20,
+        'points': 15,
         'source': "./Assets/SpecialApple.png"
     }
 }
