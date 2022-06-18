@@ -3,6 +3,9 @@ import arcade.color
 import arcade.key
 
 import utils
+import sprites
+
+from random import random
 
 
 class GameWindow(arcade.Window):
@@ -35,10 +38,12 @@ class GameWindow(arcade.Window):
         self.player = arcade.Sprite(player, 1)
         self.player.set_position(self.player_x, self.player_y)
 
+        self.timer.start_timer(id(self), 2) 
 
         self.apple = "./Assets/apple.png"
 
-        self.apples = arcade.SpriteList()
+        self.apples = arcade.SpriteList(use_spatial_hash=True)
+
 
     def on_draw(self):
         arcade.start_render()
@@ -48,16 +53,27 @@ class GameWindow(arcade.Window):
         self.apples.draw()
 
     def on_update(self, delta_time: float):
+        if self.timer.timer_finished(id(self)):
+
+            apple = sprites.Apple(self.apple)
+            apple.set_position(self.width * random(), self.height)
+            self.apples.extend([sprites.Apple(self.apple)])
+            self.timer.start_timer(id(self), 5)
+
+            print("New apple")
+
         for apple in self.apples:
             apple.center_x -= utils.GRAVITY
 
-            if apple.center_x <= 0 + 32:
+            if apple.center_y <= 0 + 32:
                 apple.remove_from_sprite_lists()
 
         if self.moving_right: self.player_x += self.player_speed * delta_time
         if self.moving_left: self.player_x -= self.player_speed * delta_time
 
         self.player.set_position(self.player_x, self.player_y)
+        self.player.update()
+        self.apples.update()
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.RIGHT: self.moving_right = True
