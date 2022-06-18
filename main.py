@@ -67,6 +67,7 @@ class GameWindow(arcade.Window):
         if player_collision_list:
             for apple in player_collision_list:
                 self.points += apple.points
+                apple.remove_from_sprite_lists()
 
         for apple in self.apples:
             apple.center_y -= utils.GRAVITY
