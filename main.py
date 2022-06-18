@@ -57,13 +57,13 @@ class GameWindow(arcade.Window):
 
             apple = sprites.Apple(self.apple)
             apple.set_position(self.width * random(), self.height)
-            self.apples.extend([sprites.Apple(self.apple)])
+            self.apples.extend([apple])
             self.timer.start_timer(id(self), 5)
 
             print("New apple")
 
         for apple in self.apples:
-            apple.center_x -= utils.GRAVITY
+            apple.center_y -= utils.GRAVITY
 
             if apple.center_y <= 0 + 32:
                 apple.remove_from_sprite_lists()
