@@ -14,6 +14,8 @@ class GameWindow(arcade.Window):
         self.player_x = None 
         self.player_y = None
 
+        self.setup()
+
     def setup(self):
         player = ":resources:images/space_shooter/playerShip1_blue.png"
 
@@ -37,3 +39,4 @@ class GameWindow(arcade.Window):
     
 if __name__ == "__main__":
     GameWindow(1280, 720, "Catch De Apple")
+    arcade.run()
