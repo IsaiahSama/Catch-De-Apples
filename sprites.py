@@ -5,7 +5,7 @@ import random
 
 apple_types = {
     "APPLE": {
-        'points': 5,
+        'points': 10,
         'source': "./Assets/apple.png"
     },
     "SPECIAL": {
