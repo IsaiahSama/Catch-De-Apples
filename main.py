@@ -29,6 +29,7 @@ class GameWindow(arcade.Window):
 
         self.moving_left = False
         self.moving_right = False
+        self.boosting = False
         self.game_over = False
 
         self.timer = utils.Timer()
@@ -59,6 +60,8 @@ class GameWindow(arcade.Window):
 
             arcade.Text(f"Your score is {self.points}", 30, self.height * 0.95).draw()
             arcade.Text(f"Hunger: {self.hunger}", 30, self.height * 0.8).draw()
+            if self.boosting:
+                arcade.Text("BOOSTING!!! (Draining hunger in exchange for speed)", self.width * 0.4, self.height * 0.1, color=arcade.color.RED).draw()
         else:
             arcade.Text(f"You lose!. Your final score: {self.points}", self.width // 4, self.height // 2, font_size=30).draw()
 
@@ -86,14 +89,17 @@ class GameWindow(arcade.Window):
             self.hunger -= 5
             self.timer.start_timer(id(self.hunger), 1)
 
+        if self.boosting:
+            self.hunger -= 1
+
         if self.hunger > 100:
             self.hunger = 100
         if self.hunger <= 0:
             self.game_over = True
 
 
-        if self.moving_right: self.player_x += self.player_speed * delta_time
-        if self.moving_left: self.player_x -= self.player_speed * delta_time
+        if self.moving_right: self.player_x += self.player_speed * delta_time if not self.boosting else self.player_speed * 1.5 * delta_time
+        if self.moving_left: self.player_x -= self.player_speed * delta_time if not self.boosting else self.player_speed * 1.5 * delta_time
 
         self.player.set_position(self.player_x, self.player_y)
         self.player.update()
@@ -102,6 +108,7 @@ class GameWindow(arcade.Window):
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.RIGHT: self.moving_right = True
         if symbol == arcade.key.LEFT: self.moving_left = True
+        if symbol == arcade.key.Z: self.boosting = not self.boosting
 
     def on_key_release(self, symbol: int, modifiers: int):
         if symbol == arcade.key.RIGHT: self.moving_right = False
