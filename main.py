@@ -16,6 +16,7 @@ class GameWindow(arcade.Window):
         self.apples = None
         self.player = None
 
+        self.points = 0
 
         arcade.set_background_color(arcade.color.SKY_BLUE)
 
@@ -52,21 +53,29 @@ class GameWindow(arcade.Window):
 
         self.apples.draw()
 
+        arcade.Text(f"Your score is {self.points}", 30, self.height * 0.95).draw()
+
+
     def on_update(self, delta_time: float):
         if self.timer.timer_finished(id(self)):
 
             apple = sprites.Apple(self.apple)
             apple.set_position(self.width * random(), self.height)
             self.apples.append(apple)
-            self.timer.start_timer(id(self), 3)
+            self.timer.start_timer(id(self), 3) 
 
-            print("New apple")
+        player_collision_list = arcade.check_for_collision_with_list(self.player, self.apples)
+
+        if player_collision_list:
+            self.points += 5
+            player_collision_list[0].remove_from_sprite_lists()
 
         for apple in self.apples:
             apple.center_y -= utils.GRAVITY
 
             if apple.center_y <= 0 + 32:
                 apple.remove_from_sprite_lists()
+
 
         if self.moving_right: self.player_x += self.player_speed * delta_time
         if self.moving_left: self.player_x -= self.player_speed * delta_time
