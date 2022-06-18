@@ -15,9 +15,12 @@ class Timer:
 
 
     def timer_finished(self, obj_id):
-        if obj_id not in self.timers: return True
+        if not self.timer_exists(obj_id): return True
         self.timers[obj_id]['CURRENT'] = time.time()
         if (self.timers[obj_id]["END"] - self.timers[obj_id]["CURRENT"]) <= 0:
             return True
 
         return False 
+
+    def timer_exists(self, obj_id):
+        return obj_id in self.timers
