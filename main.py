@@ -1,5 +1,6 @@
 import arcade
 import arcade.color
+import arcade.key
 
 
 class GameWindow(arcade.Window):
@@ -11,8 +12,13 @@ class GameWindow(arcade.Window):
         self.player = None
 
         # The Co-ordinates of the player
-        self.player_x = None 
-        self.player_y = None
+        # The center of the screen on the x axis, and near the bottom on the y axis
+        self.player_x = self.width // 2 
+        self.player_y = self.height * 0.2
+        self.player_speed = 500
+
+        self.moving_left = False
+        self.moving_right = False
 
         self.setup()
 
@@ -20,7 +26,8 @@ class GameWindow(arcade.Window):
         player = ":resources:images/space_shooter/playerShip1_blue.png"
 
         self.player = arcade.Sprite(player, 1)
-        self.player.set_position(self.width // 2, self.height * 0.2)
+        self.player.set_position(self.player_x, self.player_y)
+
 
         self.apple = "./Assets/apple.png"
 
@@ -30,10 +37,22 @@ class GameWindow(arcade.Window):
         arcade.start_render()
 
         self.player.draw()
+
         self.apples.draw()
 
     def on_update(self, delta_time: float):
-        return super().on_update(delta_time)
+        if self.moving_right: self.player_x += self.player_speed * delta_time
+        if self.moving_left: self.player_x -= self.player_speed * delta_time
+
+        self.player.set_position(self.player_x, self.player_y)
+
+    def on_key_press(self, symbol: int, modifiers: int):
+        if symbol == arcade.key.RIGHT: self.moving_right = True
+        if symbol == arcade.key.LEFT: self.moving_left = True
+
+    def on_key_release(self, symbol: int, modifiers: int):
+        if symbol == arcade.key.RIGHT: self.moving_right = False
+        if symbol == arcade.key.LEFT: self.moving_left = False
 
     
     
