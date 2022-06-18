@@ -24,7 +24,7 @@ class GameWindow(arcade.Window):
         # The center of the screen on the x axis, and near the bottom on the y axis
         self.player_x = self.width // 2 
         self.player_y = self.height * 0.2
-        self.player_speed = 500
+        self.player_speed = 600
 
         self.moving_left = False
         self.moving_right = False
