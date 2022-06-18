@@ -31,6 +31,7 @@ class GameWindow(arcade.Window):
         self.moving_right = False
         self.boosting = False
         self.game_over = False
+        self.started = False
 
         self.timer = utils.Timer()
 
@@ -43,16 +44,18 @@ class GameWindow(arcade.Window):
         self.player.set_position(self.player_x, self.player_y)
         self.hunger = 100
 
-        self.timer.start_timer(id(self), 2) 
-
         self.apple = "./Assets/apple.png"
         self.special_apple = "./Assets/SpecialApple.png"
 
         self.apples = arcade.SpriteList(use_spatial_hash=True)
 
+        self.timer.start_timer()
+
 
     def on_draw(self):
         arcade.start_render()
+
+
 
         if not self.game_over:
             self.player.draw()
@@ -67,9 +70,9 @@ class GameWindow(arcade.Window):
 
 
     def on_update(self, delta_time: float):
-        if self.timer.timer_finished(id(self)):
+        if self.timer.timer_finished(id(self.apples)):
             self.apples.append(sprites.create_apple())
-            self.timer.start_timer(id(self), 3) 
+            self.timer.start_timer(id(self.apples), 3) 
 
         player_collision_list = arcade.check_for_collision_with_list(self.player, self.apples)
 
@@ -89,8 +92,9 @@ class GameWindow(arcade.Window):
             self.hunger -= 5
             self.timer.start_timer(id(self.hunger), 1)
 
-        if self.boosting:
+        if self.timer.timer_finished(id(self.boosting)):
             self.hunger -= 1
+            self.timer.start_timer(id(self.boosting), 0.7)
 
         if self.hunger > 100:
             self.hunger = 100
