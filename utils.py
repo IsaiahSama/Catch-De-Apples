@@ -1,5 +1,8 @@
 import time
 
+
+GRAVITY = 10
+
 class Timer:
     """Class used to manage a timer"""
     

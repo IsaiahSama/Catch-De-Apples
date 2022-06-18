@@ -2,6 +2,8 @@ import arcade
 import arcade.color
 import arcade.key
 
+import utils
+
 
 class GameWindow(arcade.Window):
     def __init__(self, width, height, title):
@@ -22,6 +24,8 @@ class GameWindow(arcade.Window):
 
         self.moving_left = False
         self.moving_right = False
+
+        self.timer = utils.Timer()
 
         self.setup()
 
@@ -44,6 +48,12 @@ class GameWindow(arcade.Window):
         self.apples.draw()
 
     def on_update(self, delta_time: float):
+        for apple in self.apples:
+            apple.center_x -= utils.GRAVITY
+
+            if apple.center_x <= 0 + 32:
+                apple.remove_from_sprite_lists()
+
         if self.moving_right: self.player_x += self.player_speed * delta_time
         if self.moving_left: self.player_x -= self.player_speed * delta_time
 
