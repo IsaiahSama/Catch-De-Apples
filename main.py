@@ -57,8 +57,8 @@ class GameWindow(arcade.Window):
 
             apple = sprites.Apple(self.apple)
             apple.set_position(self.width * random(), self.height)
-            self.apples.extend([apple])
-            self.timer.start_timer(id(self), 5)
+            self.apples.append(apple)
+            self.timer.start_timer(id(self), 3)
 
             print("New apple")
 
