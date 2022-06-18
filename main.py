@@ -49,15 +49,13 @@ class GameWindow(arcade.Window):
 
         self.apples = arcade.SpriteList(use_spatial_hash=True)
 
-        self.timer.start_timer()
-
 
     def on_draw(self):
         arcade.start_render()
 
-
-
-        if not self.game_over:
+        if not self.started:
+            arcade.Text("Press Enter to begin your journey!", self.width * 0.35, self.height * 0.5, font_size=20).draw()
+        elif not self.game_over and self.started:
             self.player.draw()
             self.apples.draw()
 
@@ -65,7 +63,7 @@ class GameWindow(arcade.Window):
             arcade.Text(f"Hunger: {self.hunger}", 30, self.height * 0.8).draw()
             if self.boosting:
                 arcade.Text("BOOSTING!!! (Draining hunger in exchange for speed)", self.width * 0.4, self.height * 0.1, color=arcade.color.RED).draw()
-        else:
+        elif self.game_over:
             arcade.Text(f"You lose!. Your final score: {self.points}", self.width // 4, self.height // 2, font_size=30).draw()
 
 
@@ -113,6 +111,8 @@ class GameWindow(arcade.Window):
         if symbol == arcade.key.RIGHT: self.moving_right = True
         if symbol == arcade.key.LEFT: self.moving_left = True
         if symbol == arcade.key.Z: self.boosting = not self.boosting
+        if not self.started and symbol == arcade.key.ENTER:
+            self.started = True
 
     def on_key_release(self, symbol: int, modifiers: int):
         if symbol == arcade.key.RIGHT: self.moving_right = False
