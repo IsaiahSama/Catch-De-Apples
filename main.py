@@ -4,6 +4,7 @@ import arcade.key
 
 import utils
 import sprites
+import random
 
 from random import random
 
@@ -12,7 +13,6 @@ class GameWindow(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
 
-        self.apple = None
         self.apples = None
         self.player = None
 
@@ -42,6 +42,7 @@ class GameWindow(arcade.Window):
         self.timer.start_timer(id(self), 2) 
 
         self.apple = "./Assets/apple.png"
+        self.special_apple = "./Assets/SpecialApple.png"
 
         self.apples = arcade.SpriteList(use_spatial_hash=True)
 
@@ -58,17 +59,14 @@ class GameWindow(arcade.Window):
 
     def on_update(self, delta_time: float):
         if self.timer.timer_finished(id(self)):
-
-            apple = sprites.Apple(self.apple)
-            apple.set_position(self.width * random(), self.height)
-            self.apples.append(apple)
+            self.apples.append(sprites.create_apple())
             self.timer.start_timer(id(self), 3) 
 
         player_collision_list = arcade.check_for_collision_with_list(self.player, self.apples)
 
         if player_collision_list:
-            self.points += 5
-            player_collision_list[0].remove_from_sprite_lists()
+            for apple in player_collision_list:
+                self.points += apple.points
 
         for apple in self.apples:
             apple.center_y -= utils.GRAVITY
