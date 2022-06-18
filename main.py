@@ -15,6 +15,7 @@ class GameWindow(arcade.Window):
 
         self.apples = None
         self.player = None
+        self.hunger = 0
 
         self.points = 0
 
@@ -28,6 +29,7 @@ class GameWindow(arcade.Window):
 
         self.moving_left = False
         self.moving_right = False
+        self.game_over = False
 
         self.timer = utils.Timer()
 
@@ -38,6 +40,7 @@ class GameWindow(arcade.Window):
 
         self.player = arcade.Sprite(player, 1)
         self.player.set_position(self.player_x, self.player_y)
+        self.hunger = 100
 
         self.timer.start_timer(id(self), 2) 
 
@@ -50,11 +53,14 @@ class GameWindow(arcade.Window):
     def on_draw(self):
         arcade.start_render()
 
-        self.player.draw()
+        if not self.game_over:
+            self.player.draw()
+            self.apples.draw()
 
-        self.apples.draw()
-
-        arcade.Text(f"Your score is {self.points}", 30, self.height * 0.95).draw()
+            arcade.Text(f"Your score is {self.points}", 30, self.height * 0.95).draw()
+            arcade.Text(f"Hunger: {self.hunger}", 30, self.height * 0.8).draw()
+        else:
+            arcade.Text(f"You lose!. Your final score: {self.points}", self.width // 4, self.height // 2, font_size=30).draw()
 
 
     def on_update(self, delta_time: float):
@@ -67,6 +73,7 @@ class GameWindow(arcade.Window):
         if player_collision_list:
             for apple in player_collision_list:
                 self.points += apple.points
+                self.hunger += apple.points
                 apple.remove_from_sprite_lists()
 
         for apple in self.apples:
@@ -74,6 +81,15 @@ class GameWindow(arcade.Window):
 
             if apple.center_y <= 0 + 32:
                 apple.remove_from_sprite_lists()
+
+        if self.timer.timer_finished(id(self.hunger)):
+            self.hunger -= 5
+            self.timer.start_timer(id(self.hunger), 1)
+
+        if self.hunger > 100:
+            self.hunger = 100
+        if self.hunger <= 0:
+            self.game_over = True
 
 
         if self.moving_right: self.player_x += self.player_speed * delta_time
