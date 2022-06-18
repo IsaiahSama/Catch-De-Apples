@@ -11,6 +11,9 @@ class GameWindow(arcade.Window):
         self.apples = None
         self.player = None
 
+
+        arcade.set_background_color(arcade.color.SKY_BLUE)
+
         # The Co-ordinates of the player
         # The center of the screen on the x axis, and near the bottom on the y axis
         self.player_x = self.width // 2 
