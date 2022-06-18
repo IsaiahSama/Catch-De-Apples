@@ -116,6 +116,7 @@ class GameWindow(arcade.Window):
         if symbol == arcade.key.Z: self.boosting = not self.boosting
         if not self.started and symbol == arcade.key.ENTER:
             self.started = True
+        if symbol == arcade.key.ESCAPE: arcade.exit()
 
     def on_key_release(self, symbol: int, modifiers: int):
         if symbol == arcade.key.RIGHT: self.moving_right = False
