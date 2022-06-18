@@ -92,9 +92,10 @@ class GameWindow(arcade.Window):
             self.hunger -= 5
             self.timer.start_timer(id(self.hunger), 1)
 
-        if self.timer.timer_finished(id(self.boosting)):
-            self.hunger -= 1
-            self.timer.start_timer(id(self.boosting), 0.7)
+        if self.boosting:
+            if self.timer.timer_finished(id(self.boosting)):
+                self.hunger -= 1
+                self.timer.start_timer(id(self.boosting), 0.7)
 
         if self.hunger > 100:
             self.hunger = 100
