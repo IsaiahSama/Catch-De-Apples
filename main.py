@@ -72,7 +72,7 @@ class GameWindow(arcade.Window):
         if not self.started: return
         if self.timer.timer_finished(id(self.apples)):
             self.apples.append(sprites.create_apple())
-            self.timer.start_timer(id(self.apples), 3) 
+            self.timer.start_timer(id(self.apples), 2) 
 
         player_collision_list = arcade.check_for_collision_with_list(self.player, self.apples)
 
