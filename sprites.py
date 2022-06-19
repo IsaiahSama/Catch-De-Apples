@@ -36,14 +36,15 @@ class Player(arcade.Sprite):
         super().__init__(PLAYER)
 
         # The window
-        window = arcade.get_window()
+        self.window = arcade.get_window()
 
         # The Co-ordinates of the player
         # The center of the screen on the x axis, and near the bottom on the y axis
-        self.player_x = window.width // 2 
-        self.player_y = window.height * 0.1
+        self.player_x = self.window.width // 2 
+        self.player_y = self.window.height * 0.1
         self.player_speed = 600
         self.hunger = 100
+        self.radius = self.width // 2
 
     def feed(self, points:int) -> None:
         """Method used to increase the player's hunger by a given number of points
@@ -66,6 +67,9 @@ class Player(arcade.Sprite):
         change_speed = self.player_speed * delta_time * direction
         if boosting: change_speed *= 1.5
         self.player_x += change_speed
+
+        if self.player_x + (self.radius) > self.window.width: self.player_x = self.window.width - (self.radius)
+        if self.player_x - (self.radius) < 0: self.player_x = 0 + (self.radius)
 
     def update_position(self):
         """Used to update the position of the sprite"""
