@@ -15,17 +15,10 @@ class GameWindow(arcade.Window):
 
         self.apples = None
         self.player = None
-        self.hunger = 0
 
         self.points = 0
 
         arcade.set_background_color(arcade.color.SKY_BLUE)
-
-        # The Co-ordinates of the player
-        # The center of the screen on the x axis, and near the bottom on the y axis
-        self.player_x = self.width // 2 
-        self.player_y = self.height * 0.2
-        self.player_speed = 600
 
         self.moving_left = False
         self.moving_right = False
@@ -38,14 +31,9 @@ class GameWindow(arcade.Window):
         self.setup()
 
     def setup(self):
-        player = ":resources:images/space_shooter/playerShip1_blue.png"
 
-        self.player = arcade.Sprite(player, 1)
-        self.player.set_position(self.player_x, self.player_y)
-        self.hunger = 100
-
-        self.apple = "./Assets/apple.png"
-        self.special_apple = "./Assets/SpecialApple.png"
+        self.player = sprites.Player()
+        self.player.update_position()
 
         self.apples = arcade.SpriteList(use_spatial_hash=True)
 
@@ -60,7 +48,7 @@ class GameWindow(arcade.Window):
             self.apples.draw()
 
             arcade.Text(f"Your score is {self.points}", 30, self.height * 0.95).draw()
-            arcade.Text(f"Hunger: {self.hunger}", 30, self.height * 0.8).draw()
+            arcade.Text(f"Hunger: {self.player.hunger}", 30, self.height * 0.8).draw()
             if self.boosting:
                 arcade.Text("BOOSTING!!! (Draining hunger in exchange for speed)", self.width * 0.4, self.height * 0.1, color=arcade.color.RED).draw()
         else:
@@ -79,43 +67,35 @@ class GameWindow(arcade.Window):
         if player_collision_list:
             for apple in player_collision_list:
                 self.points += apple.points
-                self.hunger += apple.points
+                self.player.feed(apple.points)
                 apple.remove_from_sprite_lists()
 
         for apple in self.apples:
-            apple.center_y -= utils.GRAVITY
+            apple.fall()
 
-            if apple.center_y <= 0 + 32:
-                apple.remove_from_sprite_lists()
-
-        if self.timer.timer_finished(id(self.hunger)):
-            self.hunger -= 5
-            self.timer.start_timer(id(self.hunger), 1)
+        if self.timer.timer_finished(id(self.player.hunger)):
+            self.player.feed(-5)
+            self.timer.start_timer(id(self.player.hunger), 1)
 
         if self.boosting:
             if self.timer.timer_finished(id(self.boosting)):
-                self.hunger -= 1
+                self.player.feed(-1)
                 self.timer.start_timer(id(self.boosting), 0.7)
 
-        if self.hunger > 100:
-            self.hunger = 100
-        if self.hunger <= 0:
+        if self.player.hunger <= 0:
             self.game_over = True
 
+        if self.moving_right: self.player.move(1, delta_time, self.boosting)
+        if self.moving_left: self.player.move(-1, delta_time, self.boosting)
 
-        if self.moving_right: self.player_x += self.player_speed * delta_time if not self.boosting else self.player_speed * 1.5 * delta_time
-        if self.moving_left: self.player_x -= self.player_speed * delta_time if not self.boosting else self.player_speed * 1.5 * delta_time
-
-        self.player.set_position(self.player_x, self.player_y)
-        self.player.update()
+        self.player.update_position()
         self.apples.update()
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.RIGHT: self.moving_right = True
         if symbol == arcade.key.LEFT: self.moving_left = True
         if symbol == arcade.key.Z: self.boosting = not self.boosting
-        if not self.started and symbol == arcade.key.ENTER:
-            self.started = True
+        if not self.started and symbol == arcade.key.ENTER: self.started = True
         if symbol == arcade.key.ESCAPE: arcade.exit()
 
     def on_key_release(self, symbol: int, modifiers: int):

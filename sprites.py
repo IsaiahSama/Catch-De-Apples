@@ -1,6 +1,7 @@
 import arcade
 
 import random
+import utils
 
 
 apple_types = {
@@ -14,6 +15,62 @@ apple_types = {
     }
 }
 
+PLAYER = ":resources:images/space_shooter/playerShip1_blue.png"
+
+class Player(arcade.Sprite):
+    """The class to represent the player!
+    
+    Attrs:
+        player_x (int): The x position of the player
+        player_y (int): The y position of the player
+        speed (int): The speed of the player
+        hunger (int): The hunger level of the player
+        
+    Methods:
+        feed(points:int): Increases the player's hunger by the number of points
+        move(direction:int, delta_time:float, boosting:bool): Used to move the sprite left or right
+        update_position(): Used to update the position of the sprite, then call update()"""
+
+    def __init__(self):
+        super().__init__(PLAYER)
+
+        # The window
+        window = arcade.get_window()
+
+        # The Co-ordinates of the player
+        # The center of the screen on the x axis, and near the bottom on the y axis
+        self.player_x = window.width // 2 
+        self.player_y = window.height * 0.1
+        self.player_speed = 600
+        self.hunger = 100
+
+    def feed(self, points:int) -> None:
+        """Method used to increase the player's hunger by a given number of points
+        
+        Args:
+            points (int): The number of points to increase the hunger by."""
+
+        self.hunger += points
+        if self.hunger > 100:
+            self.hunger = 100
+
+    def move(self, direction:int, delta_time:float, boosting:bool) -> None:
+        """Used to move the sprite in a direction.
+        
+        Args:
+            direction (int): The direction. 1 for right, -1 for left.
+            delta_time (float): Delta time!
+            boosting (bool): Whether the character is boosting or not"""
+
+        change_speed = self.player_speed * delta_time * direction
+        if boosting: change_speed *= 1.5
+        self.player_x += change_speed
+
+    def update_position(self):
+        """Used to update the position of the sprite"""
+
+        self.set_position(self.player_x, self.player_y)
+        self.update()
 
 class Apple(arcade.Sprite):
     """An Apple Class template used to represent apples!!!
@@ -23,12 +80,20 @@ class Apple(arcade.Sprite):
         apple_type(str): The type of apple it is.
 
     Methods:
-        pass"""
+        fall(): Used to cause the apple to fall."""
 
     def __init__(self, filename:str, points:int, apple_type:str):
         super().__init__(filename)
         self.points = points
         self.apple_type = apple_type
+
+    def fall(self) -> None:
+        """Used to cause the apple to move downwards."""
+
+        self.center_y -= utils.GRAVITY
+
+        if self.center_y <= 0 + 32:
+            self.remove_from_sprite_lists()
 
 
 def create_apple() -> Apple:
