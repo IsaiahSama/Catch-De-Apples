@@ -28,6 +28,10 @@ class GameWindow(arcade.Window):
 
         self.timer = utils.Timer()
 
+        self.moosic = arcade.load_sound(utils.MAIN_SONG, True)
+        self.apple_sound = arcade.load_sound(utils.APPLE_SOUND)
+        self.game_end_sound = arcade.load_sound(utils.GAME_OVER_SOUND)
+
         self.setup()
 
     def setup(self):
@@ -58,6 +62,7 @@ class GameWindow(arcade.Window):
 
     def on_update(self, delta_time: float):
         if not self.started: return
+        if self.game_over: return
         if self.timer.timer_finished(id(self.apples)):
             self.apples.append(sprites.create_apple())
             self.timer.start_timer(id(self.apples), 2) 
@@ -68,6 +73,7 @@ class GameWindow(arcade.Window):
             for apple in player_collision_list:
                 self.points += apple.points
                 self.player.feed(apple.points)
+                arcade.play_sound(self.apple_sound)
                 apple.remove_from_sprite_lists()
 
         for apple in self.apples:
@@ -84,6 +90,7 @@ class GameWindow(arcade.Window):
 
         if self.player.hunger <= 0:
             self.game_over = True
+            arcade.play_sound(self.game_end_sound)
 
         if self.moving_right: self.player.move(1, delta_time, self.boosting)
         if self.moving_left: self.player.move(-1, delta_time, self.boosting)
@@ -95,7 +102,9 @@ class GameWindow(arcade.Window):
         if symbol == arcade.key.RIGHT: self.moving_right = True
         if symbol == arcade.key.LEFT: self.moving_left = True
         if symbol == arcade.key.Z: self.boosting = not self.boosting
-        if not self.started and symbol == arcade.key.ENTER: self.started = True
+        if not self.started and symbol == arcade.key.ENTER: 
+            self.started = True
+            arcade.play_sound(self.moosic, looping=True)
         if symbol == arcade.key.ESCAPE: arcade.exit()
 
     def on_key_release(self, symbol: int, modifiers: int):
