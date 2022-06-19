@@ -16,6 +16,7 @@ apple_types = {
 }
 
 PLAYER = ":resources:images/space_shooter/playerShip1_blue.png"
+CLOUDLINE = "./Assets/cloud_line.png"
 
 class Player(arcade.Sprite):
     """The class to represent the player!
@@ -108,3 +109,26 @@ def create_apple() -> Apple:
     apple.set_position(window.width * random.random(), window.height)
 
     return apple
+
+
+class CloudLine(arcade.Sprite):
+    """Cloud line sprite used to decorate the sky."""
+
+    def __init__(self, filename:str):
+        super().__init__(filename, 5)
+
+    def update(self):
+        self.center_y -= 20
+        if self.center_y <= 0 + 2.5:
+            self.remove_from_sprite_lists()
+
+        super().update()
+
+def create_cloud_line() -> CloudLine:
+    """Used to create a cloudline."""
+    window = arcade.get_window()
+
+    cloud = CloudLine(CLOUDLINE)
+
+    cloud.set_position(random.random() * window.width, window.height)
+    return cloud

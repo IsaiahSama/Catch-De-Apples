@@ -6,14 +6,12 @@ import utils
 import sprites
 import random
 
-from random import random
-
-
 class GameWindow(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
 
         self.apples = None
+        self.cloud_lines = None
         self.player = None
 
         self.points = 0
@@ -40,6 +38,7 @@ class GameWindow(arcade.Window):
         self.player.update_position()
 
         self.apples = arcade.SpriteList(use_spatial_hash=True)
+        self.cloud_lines = arcade.SpriteList()
 
 
     def on_draw(self):
@@ -50,6 +49,7 @@ class GameWindow(arcade.Window):
         elif not self.game_over and self.started:
             self.player.draw()
             self.apples.draw()
+            self.cloud_lines.draw()
 
             arcade.Text(f"Your score is {self.points}", 30, self.height * 0.95).draw()
             arcade.Text(f"Hunger: {self.player.hunger}", 30, self.height * 0.8).draw()
@@ -65,7 +65,11 @@ class GameWindow(arcade.Window):
         if self.game_over: return
         if self.timer.timer_finished(id(self.apples)):
             self.apples.append(sprites.create_apple())
-            self.timer.start_timer(id(self.apples), 2) 
+            self.timer.start_timer(id(self.apples), 2)
+
+        if self.timer.timer_finished(id(self.cloud_lines)):
+            self.cloud_lines.append(sprites.create_cloud_line())
+            self.timer.start_timer(id(self.cloud_lines), random.random())
 
         player_collision_list = arcade.check_for_collision_with_list(self.player, self.apples)
 
@@ -97,6 +101,7 @@ class GameWindow(arcade.Window):
 
         self.player.update_position()
         self.apples.update()
+        self.cloud_lines.update()
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.RIGHT: self.moving_right = True
@@ -104,7 +109,7 @@ class GameWindow(arcade.Window):
         if symbol == arcade.key.Z: self.boosting = not self.boosting
         if not self.started and symbol == arcade.key.ENTER: 
             self.started = True
-            arcade.play_sound(self.moosic, looping=True)
+            # arcade.play_sound(self.moosic, looping=True, volume=0.7)
         if symbol == arcade.key.ESCAPE: arcade.exit()
 
     def on_key_release(self, symbol: int, modifiers: int):
