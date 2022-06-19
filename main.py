@@ -109,7 +109,7 @@ class GameWindow(arcade.Window):
         if symbol == arcade.key.Z: self.boosting = not self.boosting
         if not self.started and symbol == arcade.key.ENTER: 
             self.started = True
-            # arcade.play_sound(self.moosic, looping=True, volume=0.7)
+            arcade.play_sound(self.moosic, looping=True, volume=0.7)
         if symbol == arcade.key.ESCAPE: arcade.exit()
 
     def on_key_release(self, symbol: int, modifiers: int):
