@@ -1,7 +1,7 @@
 """All other views goes here"""
 
 import arcade, arcade.key
-import main
+import main, utils
 
 class LevelView(arcade.View):
     """View used to display the level changes to the user
@@ -25,6 +25,4 @@ class LevelView(arcade.View):
     
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.ENTER:
-            game_view = main.GameView()
-            game_view.setup()
-            self.window.show_view(game_view)
+            utils.ViewManager.load_view(main.GameView)

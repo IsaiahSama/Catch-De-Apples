@@ -1,4 +1,6 @@
 import time
+import arcade
+
 from yaml import safe_dump, safe_load
 from os import path
 
@@ -30,17 +32,19 @@ class Timer:
     def timer_exists(self, obj_id):
         return obj_id in self.timers
 
-class SoundManager:
-    """Class created to manage sounds.
-    
-    Attrs:
-        None
-        
-    Methods:
-        create_sound(filename:str, loop:bool)"""
+class ViewManager:
+    """Class used to switch from one view to another easily."""
 
-    def __init__(self) -> None:
-        pass
+    @staticmethod
+    def load_view(view:arcade.View, **kwargs):
+        window = arcade.get_window()
+
+        new_view = view(**kwargs)
+        if hasattr(new_view, "setup"):
+            new_view.setup()
+
+        window.show_view(new_view)
+        
 
 default_state = {
     "LEVEL": 1,
@@ -89,4 +93,11 @@ class SaveStateManager:
 
         return temp_state if is_state_valid(temp_state) else default_state
 
-    
+level_info = {
+    1: {
+        "GOAL": 200
+    },
+    2: {
+        "GOAL": 350
+    }
+}

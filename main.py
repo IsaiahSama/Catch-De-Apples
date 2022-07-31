@@ -17,6 +17,7 @@ class GameView(arcade.View):
         self.game_state = utils.SaveStateManager.load_state()
         self.level = self.game_state["LEVEL"]
         self.points = self.game_state["POINTS"]
+        self.level_info = utils.level_info.get(self.level, utils.level_info[1])
 
         arcade.set_background_color(arcade.color.SKY_BLUE)
 
@@ -24,7 +25,6 @@ class GameView(arcade.View):
         self.moving_right = False
         self.boosting = False
         self.game_over = False
-        self.started = True
 
         self.timer = utils.Timer()
 
@@ -35,6 +35,7 @@ class GameView(arcade.View):
         self.setup()
 
     def setup(self):
+        arcade.play_sound(self.moosic, looping=True, volume=0.7)
 
         self.player = sprites.Player()
         self.player.update_position()
@@ -42,12 +43,11 @@ class GameView(arcade.View):
         self.apples = arcade.SpriteList(use_spatial_hash=True)
         self.cloud_lines = arcade.SpriteList()
 
+
     def on_draw(self):
         arcade.start_render()
 
-        if not self.started:
-            arcade.Text(f"Level {self.level}. Press enter to start", self.window.width * 0.35, self.window.height * 0.5, font_size=20).draw()
-        elif not self.game_over and self.started:
+        if not self.game_over:
             self.player.draw()
             self.apples.draw()
             self.cloud_lines.draw()
@@ -62,13 +62,12 @@ class GameView(arcade.View):
 
 
     def on_update(self, delta_time: float):
-        if not self.started: return
         if self.game_over:
-            self.game_state = utils.SaveStateManager.update_state(self.game_state, level=self.level, points=self.points)
-            utils.SaveStateManager.save_state(self.game_state)
-            start_view = start.StartView()
-            start_view.setup()
-            self.window.show_view(start_view)
+            self.save_game()
+            utils.ViewManager.load_view(start.StartView)
+
+        if self.points >= self.level_info["GOAL"]:
+            self.save_game()
 
         if self.timer.timer_finished(id(self.apples)):
             self.apples.append(sprites.create_apple())
@@ -114,12 +113,14 @@ class GameView(arcade.View):
         if symbol == arcade.key.RIGHT: self.moving_right = True
         if symbol == arcade.key.LEFT: self.moving_left = True
         if symbol == arcade.key.Z: self.boosting = not self.boosting
-        if not self.started and symbol == arcade.key.ENTER: 
-            self.started = True
-            arcade.play_sound(self.moosic, looping=True, volume=0.7)
         if symbol == arcade.key.ESCAPE: arcade.exit()
 
     def on_key_release(self, symbol: int, modifiers: int):
         if symbol == arcade.key.RIGHT: self.moving_right = False
         if symbol == arcade.key.LEFT: self.moving_left = False
 
+    def save_game(self):
+        """Method used to save the current game state."""
+
+        self.game_state = utils.SaveStateManager.update_state(self.game_state, level=self.level, points=self.points)
+        utils.SaveStateManager.save_state(self.game_state)

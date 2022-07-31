@@ -48,5 +48,4 @@ class StartView(arcade.View):
 
     def start_game(self):
         """Used to start the game!"""
-        level_view = views.LevelView(utils.SaveStateManager.load_state()["LEVEL"])
-        self.window.show_view(level_view)
+        utils.ViewManager.load_view(views.LevelView, level=utils.SaveStateManager.load_state()['LEVEL'])
