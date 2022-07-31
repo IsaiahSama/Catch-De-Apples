@@ -2,7 +2,7 @@ import arcade
 import arcade.color
 import arcade.key
 
-from ..Utils import utils, sprites
+from .Utils import utils, sprites
 import random
 
 class MainView(arcade.View):
@@ -115,8 +115,3 @@ class MainView(arcade.View):
         if symbol == arcade.key.RIGHT: self.moving_right = False
         if symbol == arcade.key.LEFT: self.moving_left = False
 
-    
-    
-if __name__ == "__main__":
-    GameWindow(1280, 720, "Catch De Apple")
-    arcade.run()
