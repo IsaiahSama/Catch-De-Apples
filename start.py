@@ -16,7 +16,7 @@ class StartView(arcade.View):
 
     def setup(self):
         arcade.set_background_color(arcade.color.SKY_BLUE)
-        self.v_box.add(buttons.Button("Start Game", self.start_game))
+        self.v_box.add(buttons.Button("New Game", self.start_game))
 
         self.manager.add(
             arcade.gui.UIAnchorWidget(

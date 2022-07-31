@@ -39,7 +39,6 @@ class GameView(arcade.View):
         self.apples = arcade.SpriteList(use_spatial_hash=True)
         self.cloud_lines = arcade.SpriteList()
 
-
     def on_draw(self):
         arcade.start_render()
 
