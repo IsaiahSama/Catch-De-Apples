@@ -24,7 +24,7 @@ class GameView(arcade.View):
         self.moving_right = False
         self.boosting = False
         self.game_over = False
-        self.started = False
+        self.started = True
 
         self.timer = utils.Timer()
 

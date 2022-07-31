@@ -2,7 +2,7 @@ import arcade, arcade.color, arcade.gui
 import buttons
 import utils
 
-from main import GameView
+import views
 
 
 class StartView(arcade.View):
@@ -48,6 +48,5 @@ class StartView(arcade.View):
 
     def start_game(self):
         """Used to start the game!"""
-        game_view = GameView()
-        game_view.setup()
-        self.window.show_view(game_view)
+        level_view = views.LevelView(utils.SaveStateManager.load_state()["LEVEL"])
+        self.window.show_view(level_view)
