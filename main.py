@@ -66,7 +66,9 @@ class GameView(arcade.View):
             utils.ViewManager.load_view(start.StartView)
 
         if self.points >= self.level_info["GOAL"]:
+            self.level += 1
             self.save_game()
+            utils.ViewManager.load_view(views.LevelView, level=self.level)
 
         if self.timer.timer_finished(id(self.apples)):
             self.apples.append(sprites.create_apple())
