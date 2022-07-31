@@ -1,5 +1,5 @@
 import arcade
-from Views.start import StartView
+from start import StartView
 
 
 SCREEN_WIDTH, SCREEN_HEIGHT, TITLE = 1000, 650, "Catch De Apples"

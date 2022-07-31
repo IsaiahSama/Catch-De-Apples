@@ -2,11 +2,11 @@ import arcade
 import arcade.color
 import arcade.key
 
-from .Utils import utils, sprites
+import utils, sprites
 import random
 
-class MainView(arcade.View):
-    def __init__(self, width, height, title):
+class GameView(arcade.View):
+    def __init__(self):
         super().__init__()
 
         self.apples = None
@@ -44,19 +44,19 @@ class MainView(arcade.View):
         arcade.start_render()
 
         if not self.started:
-            arcade.Text("Press Enter to begin your journey!", self.width * 0.35, self.height * 0.5, font_size=20).draw()
+            arcade.Text("Press Enter to begin your journey!", self.window.width * 0.35, self.window.height * 0.5, font_size=20).draw()
         elif not self.game_over and self.started:
             self.player.draw()
             self.apples.draw()
             self.cloud_lines.draw()
 
-            arcade.Text(f"Your score is {self.points}", 30, self.height * 0.95).draw()
-            arcade.Text(f"Hunger: {self.player.hunger}", 30, self.height * 0.8).draw()
+            arcade.Text(f"Your score is {self.points}", 30, self.window.height * 0.95).draw()
+            arcade.Text(f"Hunger: {self.player.hunger}", 30, self.window.height * 0.8).draw()
             if self.boosting:
-                arcade.Text("BOOSTING!!! (Draining hunger in exchange for speed)", self.width * 0.4, self.height * 0.1, color=arcade.color.RED).draw()
+                arcade.Text("BOOSTING!!! (Draining hunger in exchange for speed)", self.window.width * 0.4, self.window.height * 0.1, color=arcade.color.RED).draw()
         else:
             self.apples.clear()
-            arcade.Text(f"You lose!. Your final score: {self.points}", self.width // 4, self.height // 2, font_size=30).draw()
+            arcade.Text(f"You lose!. Your final score: {self.points}", self.window.width // 4, self.window.height // 2, font_size=30).draw()
 
 
     def on_update(self, delta_time: float):
