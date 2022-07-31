@@ -1,4 +1,6 @@
 import time
+from yaml import safe_dump, safe_load
+from os import path
 
 
 GRAVITY = 10
@@ -39,3 +41,54 @@ class SoundManager:
 
     def __init__(self) -> None:
         pass
+
+state_keys = ["LEVEL"]
+
+class SaveStateManager:
+    """Class used to manage save states and their information.
+    
+    Attrs:
+        None        
+    Methods: 
+        save_state(): Used to save the state of the game.
+        load_state(): Used to load the state of the game"""
+
+    @staticmethod
+    def save_state(game_state:dict):
+        """Used to save the current state of the game"""
+        with open("savefile.yaml", "w") as fp:
+            safe_dump(game_state, fp, indent=4)
+
+    @staticmethod
+    def update_state(game_state:dict,**kwargs):
+        """Used to update a given game state with provided kwargs."""
+        for k, v in kwargs.items():
+            game_state[k.upper()] = v
+
+        return game_state
+
+    @staticmethod
+    def load_state():
+        """Used to load the current state of the game"""
+
+        state = {
+            "LEVEL": 1,
+            "POINTS": 0
+        }
+
+        def is_state_valid(game_state):
+            for key in state_keys:
+                if key not in game_state.keys(): return False
+
+            return True
+
+        try:
+            with open("savefile.yaml") as fp:
+                temp_state = safe_load(fp)
+        except Exception as err:
+            print(err)
+            return state
+
+        return temp_state if is_state_valid(temp_state) else state
+
+    

@@ -3,6 +3,7 @@ import arcade.color
 import arcade.key
 
 import utils, sprites
+import start
 import random
 
 class GameView(arcade.View):
@@ -13,7 +14,9 @@ class GameView(arcade.View):
         self.cloud_lines = None
         self.player = None
 
-        self.points = 0
+        self.game_state = utils.SaveStateManager.load_state()
+        self.level = self.game_state["LEVEL"]
+        self.points = self.game_state["POINTS"]
 
         arcade.set_background_color(arcade.color.SKY_BLUE)
 
@@ -43,7 +46,7 @@ class GameView(arcade.View):
         arcade.start_render()
 
         if not self.started:
-            arcade.Text("Press Enter to begin your journey!", self.window.width * 0.35, self.window.height * 0.5, font_size=20).draw()
+            arcade.Text(f"Level {self.level}. Press enter to start", self.window.width * 0.35, self.window.height * 0.5, font_size=20).draw()
         elif not self.game_over and self.started:
             self.player.draw()
             self.apples.draw()
@@ -60,7 +63,13 @@ class GameView(arcade.View):
 
     def on_update(self, delta_time: float):
         if not self.started: return
-        if self.game_over: return
+        if self.game_over:
+            self.game_state = utils.SaveStateManager.update_state(self.game_state, level=self.level, points=self.points)
+            utils.SaveStateManager.save_state(self.game_state)
+            start_view = start.StartView()
+            start_view.setup()
+            self.window.show_view(start_view)
+
         if self.timer.timer_finished(id(self.apples)):
             self.apples.append(sprites.create_apple())
             self.timer.start_timer(id(self.apples), 2)
