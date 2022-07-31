@@ -2,7 +2,7 @@ import arcade
 import arcade.color
 import arcade.key
 
-import utils, sprites
+import utils, sprites, views
 import start
 import random
 
@@ -32,7 +32,6 @@ class GameView(arcade.View):
         self.apple_sound = arcade.load_sound(utils.APPLE_SOUND)
         self.game_end_sound = arcade.load_sound(utils.GAME_OVER_SOUND)
 
-        self.setup()
 
     def setup(self):
         arcade.play_sound(self.moosic, looping=True, volume=0.7)
@@ -52,7 +51,7 @@ class GameView(arcade.View):
             self.apples.draw()
             self.cloud_lines.draw()
 
-            arcade.Text(f"Your score is {self.points}", 30, self.window.height * 0.95).draw()
+            arcade.Text(f"Your score is {self.points}/{self.level_info['GOAL']}", 30, self.window.height * 0.95).draw()
             arcade.Text(f"Hunger: {self.player.hunger}", 30, self.window.height * 0.8).draw()
             if self.boosting:
                 arcade.Text("BOOSTING!!! (Draining hunger in exchange for speed)", self.window.width * 0.4, self.window.height * 0.1, color=arcade.color.RED).draw()
