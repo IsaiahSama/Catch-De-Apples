@@ -1,5 +1,7 @@
 import arcade, arcade.color, arcade.gui
 import buttons
+import utils
+
 from main import GameView
 
 
@@ -16,7 +18,10 @@ class StartView(arcade.View):
 
     def setup(self):
         arcade.set_background_color(arcade.color.SKY_BLUE)
-        self.v_box.add(buttons.Button("New Game", self.start_game))
+        self.v_box.add(buttons.Button("New Game", self.new_game).with_space_around(bottom=20))
+
+        if utils.SaveStateManager.load_state() != utils.default_state:
+            self.v_box.add(buttons.Button("Load Game", self.start_game).with_space_around(bottom=20))
 
         self.manager.add(
             arcade.gui.UIAnchorWidget(
@@ -36,7 +41,13 @@ class StartView(arcade.View):
     def on_update(self, delta_time: float):
         return super().on_update(delta_time)
 
+    def new_game(self):
+        """Used to start a new game"""
+        utils.SaveStateManager.save_state(utils.default_state)
+        self.start_game()
+
     def start_game(self):
+        """Used to start the game!"""
         game_view = GameView()
         game_view.setup()
         self.window.show_view(game_view)

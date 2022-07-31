@@ -42,7 +42,10 @@ class SoundManager:
     def __init__(self) -> None:
         pass
 
-state_keys = ["LEVEL"]
+default_state = {
+    "LEVEL": 1,
+    "POINTS": 0
+}
 
 class SaveStateManager:
     """Class used to manage save states and their information.
@@ -71,13 +74,8 @@ class SaveStateManager:
     def load_state():
         """Used to load the current state of the game"""
 
-        state = {
-            "LEVEL": 1,
-            "POINTS": 0
-        }
-
         def is_state_valid(game_state):
-            for key in state_keys:
+            for key in default_state.keys():
                 if key not in game_state.keys(): return False
 
             return True
@@ -87,8 +85,8 @@ class SaveStateManager:
                 temp_state = safe_load(fp)
         except Exception as err:
             print(err)
-            return state
+            return default_state
 
-        return temp_state if is_state_valid(temp_state) else state
+        return temp_state if is_state_valid(temp_state) else default_state
 
     
