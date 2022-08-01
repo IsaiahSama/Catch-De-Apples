@@ -67,7 +67,7 @@ class GameView(arcade.View):
         if self.game_over:
             utils.SoundManager.stop_playing(self.moosic)
             self.save_game()
-            utils.ViewManager.load_view(start.StartView)
+            utils.ViewManager.load_view(views.GameOverView)
 
         if self.points >= self.level_info["GOAL"]:
             self.level += 1
