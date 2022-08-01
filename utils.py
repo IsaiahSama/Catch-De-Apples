@@ -1,8 +1,9 @@
 import time
-import arcade
+import arcade, arcade.sound
 
 from yaml import safe_dump, safe_load
 from os import path
+from threading import Thread
 
 
 GRAVITY = 10
@@ -31,6 +32,69 @@ class Timer:
 
     def timer_exists(self, obj_id):
         return obj_id in self.timers
+
+songs_playing = {}
+
+def manage_songs():
+    while True:
+        for song, d in songs_playing.items():
+            if song.is_complete(d["PLAYER"]): del songs_playing[song]
+        time.sleep(0.2)
+
+manage_song = Thread(target=manage_songs, daemon=True)
+manage_song.start()
+
+class SoundManager:
+    """Used to manage all songs currently being played
+    
+    Attrs:
+        None
+    
+    Methods:
+        is_playing(song_name:str): Whether the song with the given name is playing or not.
+        start_playing(song_path:str, stream:bool, volume:float, loop:bool): Used to start playing a song
+        stop_playing(song_path:str): Used to stop playing a song """
+
+    @staticmethod
+    def is_playing(song_name:str) -> bool:
+        """Used to check whether a given song name is currently being played
+        
+        Args:
+            song_name (str): The name of the song to check for
+        """
+        
+        for k, d in songs_playing.items():
+            if song_name == d["NAME"]:
+                return [k, d]
+        return None
+
+    @staticmethod
+    def start_playing(song_path:str, stream:bool=False, volume:float=1.0, loop:bool=False) -> None:
+        """Used to start playing a song.
+        
+        Args:
+            song_path (str): The path to the song
+            stream (bool): Whether to stream the song or load it into memory
+            volume (float): The volume for the song
+            loop (bool): Whether to loop the song or not"""
+
+        sound = arcade.sound.load_sound(song_path, stream)
+        player = arcade.sound.play_sound(sound, volume, looping=loop)
+        songs_playing[sound] = {"PLAYER": player, "NAME": song_path}
+        
+    @staticmethod
+    def stop_playing(song_path:str) -> None:
+        """Used to stop a current song from playing
+        
+        Args:
+            song_path (str): The path to the song you want to check"""
+        
+        songs = SoundManager.is_playing(song_path)
+        if songs:
+            song, d = songs
+            del songs_playing[song]
+            song.stop(d["PLAYER"])
+
 
 class ViewManager:
     """Class used to switch from one view to another easily."""

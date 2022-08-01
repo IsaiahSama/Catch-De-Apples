@@ -28,13 +28,16 @@ class GameView(arcade.View):
 
         self.timer = utils.Timer()
 
-        self.moosic = arcade.load_sound(utils.MAIN_SONG, True)
+        # self.moosic = arcade.load_sound(utils.MAIN_SONG, True)
         self.apple_sound = arcade.load_sound(utils.APPLE_SOUND)
         self.game_end_sound = arcade.load_sound(utils.GAME_OVER_SOUND)
 
+        self.moosic = utils.MAIN_SONG
+
 
     def setup(self):
-        arcade.play_sound(self.moosic, looping=True, volume=0.7)
+        utils.SoundManager.start_playing(self.moosic, True, 0.7, True)
+        # arcade.play_sound(self.moosic, looping=True, volume=0.7)
 
         self.player = sprites.Player()
         self.player.update_position()
@@ -62,6 +65,7 @@ class GameView(arcade.View):
 
     def on_update(self, delta_time: float):
         if self.game_over:
+            utils.SoundManager.stop_playing(self.moosic)
             self.save_game()
             utils.ViewManager.load_view(start.StartView)
 
