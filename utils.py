@@ -17,20 +17,40 @@ class Timer:
     def __init__(self):
         self.timers = {}
 
-    def start_timer(self, obj_id, duration_in_seconds):
+    def start_timer(self, obj_id:int, duration_in_seconds:float):
+        """Used to start a timer.
+        
+        Args:
+            obj_id (int): The id to use for tracking the object
+            duration_in_seconds (float): How long the timer should last before ending"""
+
         cur_time = time.time()
         self.timers[obj_id] = {"START": cur_time, "END": cur_time + duration_in_seconds}
 
 
-    def timer_finished(self, obj_id):
-        if not self.timer_exists(obj_id): return True
+    def timer_finished(self, obj_id:int) -> bool:
+        """Used to check if a timer is finished. If the timer is finished or does not exist, return True. Otherwise False.
+        
+        Args:
+            obj_id (int): The id of the object to check.
+            
+        Returns:
+            bool"""
+        if not self.timer_exists(obj_id:int): return True
         self.timers[obj_id]['CURRENT'] = time.time()
         if (self.timers[obj_id]["END"] - self.timers[obj_id]["CURRENT"]) <= 0:
             return True
 
         return False 
 
-    def timer_exists(self, obj_id):
+    def timer_exists(self, obj_id:int) -> bool:
+        """Used to check if a timer with a given id exists
+        
+        Args:
+            obj_id (int): The id to check for
+            
+        Returns:
+            bool"""
         return obj_id in self.timers
 
 songs_playing = {}
