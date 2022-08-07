@@ -10,7 +10,7 @@ Level:
     FRUITS: [APPLE, GREEN_APPLE]
   2:
     GOAL: 400
-    FRUITS: [APPLE, GREEN_APPLE]
+    FRUITS: [APPLE, GREEN_APPLE, BANANA]
 
 # Fruits - The information on each fruit
 # POINTS (int) - How many points you get for collecting the fruit
@@ -28,4 +28,9 @@ Fruits:
     POINTS: 15
     SOURCE: "./Assets/green_apple.png"
     FREQUENCY: 4
+    SOUND: ":resources:sounds/phaseJump1.ogg"
+  BANANA:
+    POINTS: 20
+    SOURCE: "./Assets/banana.png"
+    FREQUENCY: 3
     SOUND: ":resources:sounds/phaseJump1.ogg"
