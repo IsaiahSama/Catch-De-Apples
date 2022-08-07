@@ -4,17 +4,6 @@ import random
 import utils
 
 
-apple_types = {
-    "APPLE": {
-        'points': 10,
-        'source': "./Assets/apple.png"
-    },
-    "SPECIAL": {
-        'points': 15,
-        'source': "./Assets/green_apple.png"
-    }
-}
-
 PLAYER = ":resources:images/space_shooter/playerShip1_blue.png"
 CLOUDLINE = "./Assets/cloud_line.png"
 
@@ -77,43 +66,50 @@ class Player(arcade.Sprite):
         self.set_position(self.player_x, self.player_y)
         self.update()
 
-class Apple(arcade.Sprite):
-    """An Apple Class template used to represent apples!!!
+class Fruit(arcade.Sprite):
+    """A fruit class used to create fruits
     
     Attrs:
-        points (int): How many points the apple gives
-        apple_type(str): The type of apple it is.
+        source (str): The path to the sprite image
+        points (int): How many points collecting the fruit gives
+        frequency (float): How frequently to spawn the fruit
 
     Methods:
-        fall(): Used to cause the apple to fall."""
+        fall(): Causes the sprite to fall
+        """
 
-    def __init__(self, filename:str, points:int, apple_type:str):
-        super().__init__(filename)
-        self.points = points
-        self.apple_type = apple_type
+    def __init__(self, fruit_info:dict):
+        super().__init__(fruit_info["SOURCE"])
+        self.points = fruit_info["POINTS"]
+        self.frequency = fruit_info["FREQUENCY"]
 
     def fall(self) -> None:
-        """Used to cause the apple to move downwards."""
-
+        """Causes the sprite to fall downwards"""
         self.center_y -= utils.GRAVITY
 
-        if self.center_y <= 0 + 32:
+        if self.center_y <= 0 + (self.height // 2):
             self.remove_from_sprite_lists()
 
+def create_fruit(fruits:list) -> Fruit:
+    """Used to create a fruit.
+    
+    Args:
+        fruits (list): A list of valid fruits to choose from. Depends on level
+        
+    Returns:
+        Fruit"""
+    
+    fruit_name = random.choice(fruits)
+    yaml_info = utils.load_yaml("stageinfo")
+    fruit_info = yaml_info["Fruits"].get(fruit_name, "APPLE")
 
-def create_apple() -> Apple:
-    apple_type = random.choice(list(apple_types.keys()))
-    apple_data = apple_types[apple_type]
-    points, source = apple_data['points'], apple_data['source']
-
-    apple = Apple(source, points, apple_type)
+    fruit = Fruit(fruit_info)
 
     window = arcade.get_window()
 
-    apple.set_position(window.width * random.random(), window.height)
+    fruit.set_position(window.width * random.random(), window.height)
 
-    return apple
-
+    return fruit
 
 class CloudLine(arcade.Sprite):
     """Cloud line sprite used to decorate the sky."""

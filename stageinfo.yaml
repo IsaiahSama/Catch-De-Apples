@@ -7,8 +7,10 @@
 Level:
   1:
     GOAL: 200
+    FRUITS: [APPLE, GREEN_APPLE]
   2:
     GOAL: 400
+    FRUITS: [APPLE, GREEN_APPLE]
 
 # Fruits - The information on each fruit
 # POINTS (int) - How many points you get for collecting the fruit

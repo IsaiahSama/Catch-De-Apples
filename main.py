@@ -10,7 +10,7 @@ class GameView(arcade.View):
     def __init__(self):
         super().__init__()
 
-        self.apples = None
+        self.fruits = None
         self.cloud_lines = None
         self.player = None
 
@@ -42,7 +42,7 @@ class GameView(arcade.View):
         self.player = sprites.Player()
         self.player.update_position()
 
-        self.apples = arcade.SpriteList(use_spatial_hash=True)
+        self.fruits = arcade.SpriteList()
         self.cloud_lines = arcade.SpriteList()
 
 
@@ -51,7 +51,7 @@ class GameView(arcade.View):
 
         if not self.game_over:
             self.player.draw()
-            self.apples.draw()
+            self.fruits.draw()
             self.cloud_lines.draw()
 
             arcade.Text(f"Your score is {self.points}/{self.level_info['GOAL']}", 30, self.window.height * 0.95).draw()
@@ -59,7 +59,7 @@ class GameView(arcade.View):
             if self.boosting:
                 arcade.Text("BOOSTING!!! (Draining hunger in exchange for speed)", self.window.width * 0.4, self.window.height * 0.1, color=arcade.color.RED).draw()
         else:
-            self.apples.clear()
+            self.fruits.clear()
             arcade.Text(f"You lose!. Your final score: {self.points}", self.window.width // 4, self.window.height // 2, font_size=30).draw()
 
 
@@ -74,25 +74,25 @@ class GameView(arcade.View):
             self.save_game()
             utils.ViewManager.load_view(views.LevelView, level=self.level)
 
-        if self.timer.timer_finished(id(self.apples)):
-            self.apples.append(sprites.create_apple())
-            self.timer.start_timer(id(self.apples), 2)
+        if self.timer.timer_finished(id(self.fruits)):
+            self.fruits.append(sprites.create_fruit(self.level_info["FRUITS"]))
+            self.timer.start_timer(id(self.fruits), 2)
 
         if self.timer.timer_finished(id(self.cloud_lines)):
             self.cloud_lines.append(sprites.create_cloud_line())
             self.timer.start_timer(id(self.cloud_lines), random.random())
 
-        player_collision_list = arcade.check_for_collision_with_list(self.player, self.apples)
+        player_collision_list = arcade.check_for_collision_with_list(self.player, self.fruits)
 
         if player_collision_list:
-            for apple in player_collision_list:
-                self.points += apple.points
-                self.player.feed(apple.points)
+            for fruit in player_collision_list:
+                self.points += fruit.points
+                self.player.feed(fruit.points)
                 arcade.play_sound(self.apple_sound)
-                apple.remove_from_sprite_lists()
+                fruit.remove_from_sprite_lists()
 
-        for apple in self.apples:
-            apple.fall()
+        for fruit in self.fruits:
+            fruit.fall()
 
         if self.timer.timer_finished(id(self.player.hunger)):
             self.player.feed(-5)
@@ -111,7 +111,7 @@ class GameView(arcade.View):
         if self.moving_left: self.player.move(-1, delta_time, self.boosting)
 
         self.player.update_position()
-        self.apples.update()
+        self.fruits.update()
         self.cloud_lines.update()
 
     def on_key_press(self, symbol: int, modifiers: int):
