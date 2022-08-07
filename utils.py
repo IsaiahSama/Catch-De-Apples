@@ -11,6 +11,21 @@ MAIN_SONG = ":resources:music/1918.mp3"
 APPLE_SOUND = ":resources:sounds/phaseJump1.ogg"
 GAME_OVER_SOUND = ":resources:sounds/gameover2.wav"
 
+def load_yaml(filename:str) -> bool | dict:
+    """Used to load a yaml file
+    
+    Args:
+        filename (str): The filename to load. Do not include .yaml"""
+    filename += ".yaml"
+    if not path.exists(filename):
+        print("Given file does not exist")
+        return False
+    
+    with open(filename) as fp:
+        data = safe_load(fp)
+    
+    return data
+
 class Timer:
     """Class used to manage a timer"""
     
@@ -36,7 +51,7 @@ class Timer:
             
         Returns:
             bool"""
-        if not self.timer_exists(obj_id:int): return True
+        if not self.timer_exists(obj_id): return True
         self.timers[obj_id]['CURRENT'] = time.time()
         if (self.timers[obj_id]["END"] - self.timers[obj_id]["CURRENT"]) <= 0:
             return True
