@@ -1,0 +1,26 @@
+--
+
+# Level - The information on each level
+# GOAL (int) is how much fruit is needed before player can proceed to the next level
+# FRUITS (list) is a list of the available fruits that can show up in the level
+
+Level:
+  1:
+    GOAL: 200
+  2:
+    GOAL: 400
+
+# Fruits - The information on each fruit
+# POINTS (int) - How many points you get for collecting the fruit
+# SOURCE (str) - The file path to the source
+# FREQUENCY (float) - How frequent the fruit should spawn (Every x seconds)
+
+Fruits:
+  APPLE:
+    POINTS: 10
+    SOURCE: "./Assets/apple.png"
+    FREQUENCY: 2
+  GREEN_APPLE:
+    POINTS: 15
+    SOURCE: "./Assets/green_apple.png"
+    FREQUENCY: 4
