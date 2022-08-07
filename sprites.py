@@ -11,7 +11,7 @@ apple_types = {
     },
     "SPECIAL": {
         'points': 15,
-        'source': "./Assets/SpecialApple.png"
+        'source': "./Assets/green_apple.png"
     }
 }
 

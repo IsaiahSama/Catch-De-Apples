@@ -17,7 +17,7 @@ class GameView(arcade.View):
         self.game_state = utils.SaveStateManager.load_state()
         self.level = self.game_state["LEVEL"]
         self.points = self.game_state["POINTS"]
-        self.level_info = utils.level_info.get(self.level, utils.level_info[1])
+        self.level_info = utils.get_level_info(self.level)
 
         arcade.set_background_color(arcade.color.SKY_BLUE)
 

@@ -192,11 +192,15 @@ class SaveStateManager:
 
         return temp_state if is_state_valid(temp_state) else default_state
 
-level_info = {
-    1: {
-        "GOAL": 200
-    },
-    2: {
-        "GOAL": 350
-    }
-}
+def get_level_info(level:int) -> dict:
+    """Used to get the information on a particular level
+    
+    Args:
+        level (int): The level to get the info of
+        
+    Returns:
+        dict"""
+
+    data = load_yaml("stageinfo")
+    level_info = data["Level"].get(level, 1)
+    return level_info
