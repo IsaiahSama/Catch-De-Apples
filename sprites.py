@@ -82,6 +82,7 @@ class Fruit(arcade.Sprite):
         super().__init__(fruit_info["SOURCE"])
         self.points = fruit_info["POINTS"]
         self.frequency = fruit_info["FREQUENCY"]
+        self.sound = arcade.load_sound(fruit_info["SOUND"])
 
     def fall(self) -> None:
         """Causes the sprite to fall downwards"""

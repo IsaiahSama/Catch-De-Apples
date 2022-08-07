@@ -29,7 +29,6 @@ class GameView(arcade.View):
         self.timer = utils.Timer()
 
         # self.moosic = arcade.load_sound(utils.MAIN_SONG, True)
-        self.apple_sound = arcade.load_sound(utils.APPLE_SOUND)
         self.game_end_sound = arcade.load_sound(utils.GAME_OVER_SOUND)
 
         self.moosic = utils.MAIN_SONG
@@ -88,7 +87,7 @@ class GameView(arcade.View):
             for fruit in player_collision_list:
                 self.points += fruit.points
                 self.player.feed(fruit.points)
-                arcade.play_sound(self.apple_sound)
+                arcade.play_sound(fruit.sound)
                 fruit.remove_from_sprite_lists()
 
         for fruit in self.fruits:

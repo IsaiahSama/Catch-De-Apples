@@ -16,13 +16,16 @@ Level:
 # POINTS (int) - How many points you get for collecting the fruit
 # SOURCE (str) - The file path to the source
 # FREQUENCY (float) - How frequent the fruit should spawn (Every x seconds)
+# SOUND (str)- The file path to the sound the fruit makes when being collected
 
 Fruits:
   APPLE:
     POINTS: 10
     SOURCE: "./Assets/apple.png"
     FREQUENCY: 2
+    SOUND: ":resources:sounds/phaseJump1.ogg"
   GREEN_APPLE:
     POINTS: 15
     SOURCE: "./Assets/green_apple.png"
     FREQUENCY: 4
+    SOUND: ":resources:sounds/phaseJump1.ogg"
