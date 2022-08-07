@@ -3,7 +3,6 @@ import arcade.color
 import arcade.key
 
 import utils, sprites, views
-import start
 import random
 
 class GameView(arcade.View):
@@ -13,6 +12,7 @@ class GameView(arcade.View):
         self.fruits = None
         self.cloud_lines = None
         self.player = None
+        self.timer = utils.Timer()
 
         self.game_state = utils.SaveStateManager.load_state()
         self.level = self.game_state["LEVEL"]
@@ -26,7 +26,6 @@ class GameView(arcade.View):
         self.boosting = False
         self.game_over = False
 
-        self.timer = utils.Timer()
 
         # self.moosic = arcade.load_sound(utils.MAIN_SONG, True)
         self.game_end_sound = arcade.load_sound(utils.GAME_OVER_SOUND)
@@ -43,6 +42,13 @@ class GameView(arcade.View):
 
         self.fruits = arcade.SpriteList()
         self.cloud_lines = arcade.SpriteList()
+
+        fruit_info = utils.load_yaml("stageinfo")["Fruits"]
+
+        self.fruit_objs = [sprites.Fruit(fruit_info[fruit]) for fruit in self.level_info["FRUITS"]]
+        
+        for obj in self.fruit_objs:
+            self.timer.start_timer(id(obj), obj.frequency)
 
 
     def on_draw(self):
@@ -73,9 +79,14 @@ class GameView(arcade.View):
             self.save_game()
             utils.ViewManager.load_view(views.LevelView, level=self.level)
 
-        if self.timer.timer_finished(id(self.fruits)):
-            self.fruits.append(sprites.create_fruit(self.level_info["FRUITS"]))
-            self.timer.start_timer(id(self.fruits), 2)
+        for fruit in self.fruit_objs:
+            if self.timer.timer_finished(id(fruit)):
+                self.fruits.append(sprites.create_fruit(fruit.name))
+                self.timer.start_timer(id(fruit), fruit.frequency)
+
+        # if self.timer.timer_finished(id(self.fruits)):
+        #     self.fruits.append(sprites.create_fruit(self.level_info["FRUITS"]))
+        #     self.timer.start_timer(id(self.fruits), 2)
 
         if self.timer.timer_finished(id(self.cloud_lines)):
             self.cloud_lines.append(sprites.create_cloud_line())

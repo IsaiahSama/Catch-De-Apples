@@ -80,6 +80,7 @@ class Fruit(arcade.Sprite):
 
     def __init__(self, fruit_info:dict):
         super().__init__(fruit_info["SOURCE"])
+        self.name = fruit_info["NAME"]
         self.points = fruit_info["POINTS"]
         self.frequency = fruit_info["FREQUENCY"]
         self.sound = arcade.load_sound(fruit_info["SOUND"])
@@ -91,16 +92,15 @@ class Fruit(arcade.Sprite):
         if self.center_y <= 0 + (self.height // 2):
             self.remove_from_sprite_lists()
 
-def create_fruit(fruits:list) -> Fruit:
+def create_fruit(fruit_name:str) -> Fruit:
     """Used to create a fruit.
     
     Args:
-        fruits (list): A list of valid fruits to choose from. Depends on level
+        fruit_name (str): The name of the fruit to create
         
     Returns:
         Fruit"""
     
-    fruit_name = random.choice(fruits)
     yaml_info = utils.load_yaml("stageinfo")
     fruit_info = yaml_info["Fruits"].get(fruit_name, "APPLE")
 

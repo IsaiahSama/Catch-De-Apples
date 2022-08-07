@@ -13,6 +13,7 @@ Level:
     FRUITS: [APPLE, GREEN_APPLE, BANANA]
 
 # Fruits - The information on each fruit
+# NAME - The name of the fruitt
 # POINTS (int) - How many points you get for collecting the fruit
 # SOURCE (str) - The file path to the source
 # FREQUENCY (float) - How frequent the fruit should spawn (Every x seconds)
@@ -20,16 +21,19 @@ Level:
 
 Fruits:
   APPLE:
+    NAME: "APPLE"
     POINTS: 10
     SOURCE: "./Assets/apple.png"
     FREQUENCY: 2
     SOUND: ":resources:sounds/phaseJump1.ogg"
   GREEN_APPLE:
+    NAME: "GREEN_APPLE"
     POINTS: 15
     SOURCE: "./Assets/green_apple.png"
     FREQUENCY: 4
     SOUND: ":resources:sounds/phaseJump1.ogg"
   BANANA:
+    NAME: "BANANA"
     POINTS: 20
     SOURCE: "./Assets/banana.png"
     FREQUENCY: 3
