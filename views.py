@@ -21,7 +21,7 @@ class LevelView(arcade.View):
 
         arcade.draw_text(f"LEVEL {self.level}", self.window.width * 0.5, self.window.height * 0.7, font_size=20)
 
-        arcade.draw_text("PRESS ENTER TO BEGIN", self.window.width * 0.43, self.window.height * 0.6, font_size=13)
+        arcade.draw_text("PRESS ENTER TO BEGIN", self.window.width * 0.45, self.window.height * 0.6, font_size=13)
     
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.ENTER:
